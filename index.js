@@ -1,7 +1,11 @@
 const config = require("./config");
 
+const cors = require("cors");
 const express = require("express");
 const app = express();
+app.use(express.json());
+
+app.use(cors());
 
 const port = config.API_PORT || 3000;
 
@@ -9,8 +13,13 @@ const port = config.API_PORT || 3000;
 // See your keys here: https://dashboard.stripe.com/apikeys
 const stripe = require("stripe")(config.SECRET_KEY);
 
+app.get("/", (req, res) => {
+  res.send("Home");
+});
+
 app.post("/create-payment-intent", async (req, res) => {
   // Create a PaymentIntent with the order amount and currency
+  console.log("/create-payment-intent", "req.body", req.body);
   const paymentIntent = await stripe.paymentIntents.create({
     amount: req.body.amount,
     currency: "sgd",
