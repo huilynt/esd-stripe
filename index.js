@@ -13,11 +13,11 @@ const port = config.API_PORT || 3000;
 // See your keys here: https://dashboard.stripe.com/apikeys
 const stripe = require("stripe")(config.SECRET_KEY);
 
-app.get("/", (req, res) => {
+app.get("/stripe/healthCheck", (req, res) => {
   res.send("Home");
 });
 
-app.post("/create-payment-intent", async (req, res) => {
+app.post("/stripe/create-payment-intent", async (req, res) => {
   // Create a PaymentIntent with the order amount and currency
   console.log("/create-payment-intent", "req.body", req.body);
   const paymentIntent = await stripe.paymentIntents.create({
@@ -26,6 +26,7 @@ app.post("/create-payment-intent", async (req, res) => {
     automatic_payment_methods: {
       enabled: true,
     },
+    metadata: {orderId: req.body.orderId},
   });
 
   res.send({
@@ -37,7 +38,8 @@ app.post("/create-payment-intent", async (req, res) => {
 // and a return_url to indicate where Stripe should redirect
 // the user after they complete the payment.
 // elements = stripe.elements({ appearance, clientSecret });
-app.post("/confirm-payment", async (req, res) => {
+app.post("/stripe/confirm-payment", async (req, res) => {
+  
   const confirmPayment = await stripe.confirmPayment({
     elements: req.body.elements,
     confirmParams: {
