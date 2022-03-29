@@ -11,7 +11,7 @@ const port = 3000;
 
 // Set your secret key. Remember to switch to your live secret key in production.
 // See your keys here: https://dashboard.stripe.com/apikeys
-const stripe = require("stripe")(config.SECRET_KEY);
+const stripe = require("stripe")(process.env.SECRET_KEY);
 
 app.get("/stripe/healthCheck", (req, res) => {
   res.send("Home");
