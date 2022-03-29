@@ -26,7 +26,7 @@ app.post("/stripe/create-payment-intent", async (req, res) => {
     automatic_payment_methods: {
       enabled: true,
     },
-    metadata: {orderId: req.body.orderId},
+    metadata: {orderId: req.body.orderId, clientId: req.body.clientId},
   });
 
   res.send({
